@@ -29,11 +29,10 @@ app.use(
   swaggerUi.setup(swaggerDocument),
 );
 app.use("/v1/health", restrictInProd, healthRouter);
-
 app.use("/v1/auth", authRouter);
 app.use("/v1/forms", formsRouter);
 
-app.use((err, req, res) => {
+app.use((err, req, res, next) => {
   if (err instanceof ZodError) {
     return res
       .status(400)
@@ -43,11 +42,11 @@ app.use((err, req, res) => {
     return res.status(400).json({ message: err.message });
   }
   console.error(err);
-  res.status(500).json({ message: "Internal Server Error" });
+  return res.status(500).json({ message: "Internal Server Error" });
 });
 
 app.use((req, res) => {
-  res.status(404).json({ error: "Not Found" });
+  return res.status(404).json({ error: "Not Found" });
 });
 
 export default app;

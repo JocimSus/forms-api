@@ -2,7 +2,7 @@ import { verifyToken } from "../utils/jwt.js";
 
 export function authRequired(req, res, next) {
   const header = req.headers.authorization || "";
-  const token = header.startsWith("Bearer ") ? header.slice(7) : null;
+  const token = req.cookies.session || (header.startsWith("Bearer ") ? header.slice(7) : null);
 
   if (!token) {
     return res.status(401).json({ message: "Unauthorized" });
@@ -19,7 +19,7 @@ export function authRequired(req, res, next) {
 
 export function authOptional(req, _res, next) {
   const header = req.headers.authorization || "";
-  const token = header.startsWith("Bearer ") ? header.slice(7) : null;
+  const token = req.cookies.session || (header.startsWith("Bearer ") ? header.slice(7) : null);
 
   if (!token) {
     return next();

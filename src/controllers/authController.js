@@ -45,6 +45,7 @@ export async function login(req, res, next) {
     }
 
     const token = signToken({ sub: user.id });
+    res.cookie("session", token, cookieOpts());
 
     return res.json({
       token,
@@ -53,4 +54,36 @@ export async function login(req, res, next) {
   } catch (error) {
     next(error);
   }
+}
+
+export async function logout(req, res) {
+  res.clearCookie("session", cookieOpts());
+  return res.status(204).end();
+}
+
+export async function me(req, res, next) {
+  try {
+    const user = await prisma.user.findUnique({
+      where: { id: req.user.id },
+      select: { id: true, name: true, email: true },
+    });
+
+    if (!user) {
+      return res.status(404).json({ message: "User not found" });
+    }
+
+    res.json({ user });
+  } catch (error) {
+    next(error);
+  }
+}
+
+function cookieOpts() {
+  return {
+    httpOnly: true,
+    secure: process.env.NODE_ENV === "production",
+    sameSite: "strict",
+    maxAge: 1000 * 60 * 60 * 24 * 7,
+    path: "/",
+  };
 }
