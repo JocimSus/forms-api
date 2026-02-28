@@ -5,12 +5,15 @@ export async function getAllForms(req, res, next) {
   try {
     const forms = await prisma.form.findMany({
       orderBy: { createdAt: "desc" },
-      include: { creator: { select: { id: true, name: true, email: true } } },
+      include: {
+        creator: { select: { id: true, name: true, email: true } },
+        questions: { select: { id: true, text: true, type: true } },
+      },
     });
     res.json(forms);
   } catch (error) {
     next(error);
-    console.log(error)
+    console.log(error);
   }
 }
 
@@ -19,7 +22,10 @@ export async function getFormById(req, res, next) {
     const { id } = req.params;
     const form = await prisma.form.findUnique({
       where: { id },
-      include: { creator: { select: { id: true, name: true, email: true } } },
+      include: {
+        creator: { select: { id: true, name: true, email: true } },
+        questions: { include: { options: true } },
+      },
     });
 
     if (!form) {
@@ -35,12 +41,27 @@ export async function getFormById(req, res, next) {
 export async function createForm(req, res, next) {
   try {
     const data = formCreateSchema.parse(req.body);
+    const { questions, ...formData } = data;
+
     const form = await prisma.form.create({
       data: {
-        ...data,
+        ...formData,
         creatorId: req.user.id,
+        questions: {
+          create: questions?.map((q) => ({
+            text: q.text,
+            type: q.type,
+            required: q.required,
+            options: {
+              create: q.options?.map((text) => ({ text })),
+            },
+          })),
+        },
       },
-      include: { creator: { select: { id: true, name: true, email: true } } },
+      include: {
+        creator: { select: { id: true, name: true, email: true } },
+        questions: { include: { options: true } },
+      },
     });
 
     res.status(201).json(form);

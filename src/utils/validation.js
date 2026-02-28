@@ -14,6 +14,21 @@ export const loginSchema = z.object({
 export const formCreateSchema = z.object({
   title: z.string(),
   description: z.string().optional(),
+  questions: z
+    .array(
+      z.object({
+        text: z.string(),
+        type: z.enum([
+          "SHORT_ANSWER",
+          "MULTIPLE_CHOICE",
+          "CHECKBOX",
+          "DROPDOWN",
+        ]),
+        required: z.boolean().default(false),
+        options: z.array(z.string()).optional(),
+      }),
+    )
+    .optional(),
 });
 
 export const formUpdateSchema = z.object({
