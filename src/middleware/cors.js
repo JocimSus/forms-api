@@ -1,9 +1,7 @@
 import cors from "cors";
 
-// export const corsConfig = cors({
-//   origin: "*",
-//   methods: ["GET", "POST", "PUT", "DELETE"],
-//   credentials: false,
-// });
-
-export const corsConfig = cors();
+export const corsConfig = cors({
+  origin: "http://localhost:5173",
+  methods: ["GET", "POST", "PUT", "PATCH", "DELETE"],
+  credentials: true,
+});
