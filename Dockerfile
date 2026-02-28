@@ -5,5 +5,4 @@ WORKDIR /app
 COPY . .
 
 RUN pnpm install --frozen-lockfile
-RUN pnpm prisma generate
-CMD ["node", "server.js"]
+CMD ["sh", "-c", "pnpm prisma generate && node server.js"]
