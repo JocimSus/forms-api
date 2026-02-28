@@ -1,17 +1,21 @@
 import { Router } from "express";
-import { authRequired } from "../middleware/auth.js";
+import { authRequired, authOptional } from "../middleware/auth.js";
 import {
   getAllForms,
   getFormById,
   createForm,
   updateForm,
   deleteForm,
+  submitResponse,
+  getFormResponses,
 } from "../controllers/formController.js";
 
 export const formsRouter = Router();
 
-formsRouter.get("/", getAllForms);
-formsRouter.get("/:id", getFormById);
+formsRouter.get("/", authOptional, getAllForms);
+formsRouter.get("/:id", authOptional, getFormById);
 formsRouter.post("/", authRequired, createForm);
 formsRouter.patch("/:id", authRequired, updateForm);
 formsRouter.delete("/:id", authRequired, deleteForm);
+formsRouter.post("/:id/responses", authOptional, submitResponse);
+formsRouter.get("/:id/responses", authRequired, getFormResponses);
