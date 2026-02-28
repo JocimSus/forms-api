@@ -1,0 +1,16 @@
+services:
+  forms-api:
+    image: jocimsus/forms-api:main
+    container_name: forms-api
+    labels:
+      - "com.centurylinklabs.watchtower.enable=true"
+    ports:
+      - 4000:4000
+    env_file:
+      - .env
+    networks:
+      - forms-net
+
+networks:
+  forms-net:
+    external: true
