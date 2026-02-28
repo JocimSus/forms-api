@@ -14,6 +14,7 @@ export const loginSchema = z.object({
 export const formCreateSchema = z.object({
   title: z.string(),
   description: z.string().optional(),
+  status: z.enum(["DRAFT", "PUBLISHED", "CLOSED"]).optional(),
   questions: z
     .array(
       z.object({

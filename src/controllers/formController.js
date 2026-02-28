@@ -76,12 +76,12 @@ export async function getFormById(req, res, next) {
 export async function createForm(req, res, next) {
   try {
     const data = formCreateSchema.parse(req.body);
-    const { questions, ...formData } = data;
+    const { questions, status, ...formData } = data;
 
     const form = await prisma.form.create({
       data: {
         ...formData,
-        status: "DRAFT",
+        status: status || "DRAFT",
         creatorId: req.user.id,
         questions: {
           create: questions?.map((q) => ({
