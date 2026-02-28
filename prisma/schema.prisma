@@ -16,10 +16,17 @@ model User {
   updatedAt DateTime @updatedAt
 }
 
+enum FormStatus {
+  DRAFT
+  PUBLISHED
+  CLOSED
+}
+
 model Form {
   id          String       @id @default(cuid())
   title       String
   description String?
+  status      FormStatus   @default(DRAFT)
   creatorId   String
   creator     User         @relation(fields: [creatorId], references: [id])
   questions   Question[]
