@@ -24,7 +24,6 @@ app.use(cookieParser());
 
 app.use(
   "/v1/docs",
-  restrictInProd,
   swaggerUi.serve,
   swaggerUi.setup(swaggerDocument),
 );
