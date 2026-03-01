@@ -17,7 +17,7 @@ const file = fs.readFileSync("swagger.yaml", "utf8");
 const swaggerDocument = YAML.parse(file);
 dotenv.config();
 
-app.use(cors());
+app.use(corsConfig);
 app.use(express.urlencoded({ extended: true }));
 app.use(express.json());
 app.use(cookieParser());
